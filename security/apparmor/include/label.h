@@ -314,13 +314,26 @@ int aa_label_asxprint(char **strp, struct aa_ns *ns, struct aa_label *label,
 		      int flags, gfp_t gfp);
 int aa_label_acntsxprint(char __counted **strp, struct aa_ns *ns,
 			 struct aa_label *label, int flags, gfp_t gfp);
+#ifdef CONFIG_AUDIT
 void aa_label_xaudit(struct audit_buffer *ab, struct aa_ns *ns,
 		     struct aa_label *label, int flags, gfp_t gfp);
+void aa_label_audit(struct audit_buffer *ab, struct aa_label *label, gfp_t gfp);
+#else
+static inline void aa_label_xaudit(struct audit_buffer *ab, struct aa_ns *ns,
+                     struct aa_label *label, int flags, gfp_t gfp)
+{
+    return;
+}
+
+static inline void aa_label_audit(struct audit_buffer *ab, struct aa_label *label, gfp_t gfp)
+{
+   return;
+}
+#endif
 void aa_label_seq_xprint(struct seq_file *f, struct aa_ns *ns,
 			 struct aa_label *label, int flags, gfp_t gfp);
 void aa_label_xprintk(struct aa_ns *ns, struct aa_label *label, int flags,
 		      gfp_t gfp);
-void aa_label_audit(struct audit_buffer *ab, struct aa_label *label, gfp_t gfp);
 void aa_label_seq_print(struct seq_file *f, struct aa_label *label, gfp_t gfp);
 void aa_label_printk(struct aa_label *label, gfp_t gfp);
 
